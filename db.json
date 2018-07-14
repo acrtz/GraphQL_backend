@@ -1,0 +1,28 @@
+{
+  "organizations": [
+    {
+      "id": "o1",
+      "name": "coder bunker",
+      "city": "Shanghai",
+      "description": "tech"
+    },
+    {
+      "id": "o2",
+      "name": "fitfam",
+      "city": "Shanghai",
+      "description": "fitness"
+    }
+  ],
+  "people": [
+    {
+      "id": "p1",
+      "name": "Billy Bob",
+      "organizationId": "o2"
+    },
+    {
+      "id": "p2",
+      "name": "Silva Hernandez",
+      "organizationId": "o1"
+    }
+  ]
+}
