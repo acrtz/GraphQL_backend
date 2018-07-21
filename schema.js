@@ -43,9 +43,9 @@ const OrganizationType = new GraphQLObjectType({
       resolve(parent){ //parent, arguments, context, info
         //making a request to the postgress db we connected to earlier and 
         //returning the response. 
-        return db.many(
+        return db.any(
           'SELECT * FROM person WHERE organization_id = $1', [parent.id]
-        ).then(data => data)
+        )
       }
     }
   })
@@ -60,13 +60,13 @@ const PersonType = new GraphQLObjectType({
     organization: { 
       type: OrganizationType,
       resolve(parent) { //parent, args, context, info
-        return db.one(
+        return db.any(
           //notice that the parent argument can be used to access data fields 
           //from the parent object. In the database person is associated to 
           //organization via organization_id.($1 is the first argument in the following 
           //array, $2 would be the second...)
           'SELECT * FROM organization WHERE id = $1', [parent.organization_id]
-        ).then(data => data)
+        )
       }
     }
   })
@@ -92,34 +92,34 @@ const query = new GraphQLObjectType({
       //the resolver function.
       args: { id: { type: GraphQLString } },
       resolve(obj, args) { //parent, arguments, context, info
-        return db.one(
+        return db.any(
           'SELECT * FROM organization WHERE id = $1',[args.id]
-        ).then(data => data)
+        )
       }
     },
     allOrganizations: {
       type: GraphQLList(OrganizationType),
       resolve() { //parent, arguments, context, info
-        return db.many(
+        return db.any(
           `SELECT * FROM organization`
-        ).then(data => data)
+        )
       }
     },
     person: {
       type: PersonType,
       args: { id: { type: GraphQLString } },
       resolve(parent, args) { //parent, arguments, context, info
-        return db.one(
+        return db.any(
           'SELECT * FROM person WHERE id = $1', [args.id]
-        ).then(data => data)
+        )
       }
     },
     allPeople: {
       type: new GraphQLList(PersonType),
       resolve() { //parent, arguments, context, info
-        return db.many(
+        return db.any(
           `SELECT * FROM person`
-        ).then(data => data)
+        )
       }
     }
   }
@@ -140,10 +140,10 @@ const mutation = new GraphQLObjectType({
         organization_id: { type: GraphQLString }
       },
       resolve(parent, args) { //parent, arguments, context, info
-        return db.one(
+        return db.any(
           `INSERT INTO person(name, organization_id) 
           VALUES ($1,$2) RETURNING *`,[args.name, args.organization_id]
-        ).then(data => data)
+        )
       }
     }
   }
